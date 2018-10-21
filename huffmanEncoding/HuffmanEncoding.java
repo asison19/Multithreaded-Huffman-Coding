@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -25,8 +26,12 @@ public class HuffmanEncoding {
 		try {
 			BufferedReader br = new BufferedReader((new FileReader(constitution))); 
 			BufferedReader brOutput = new BufferedReader((new FileReader(constitution))); 
-			Map<Character, Integer> frequencyMap = findFrequency(br);
+			long createTreeStartTime = System.nanoTime();
+			Map<Character, Integer> frequencyMap = findFrequency(br, constitution);
 			HuffmanTree huffmanTree = new HuffmanTree(frequencyMap);
+			long createTreeEndTime = System.nanoTime();
+			double createTreeTotalTime = ( (double) createTreeEndTime - createTreeStartTime) / 1000000000.0;
+			System.out.println("Time to create Huffman Tree: " + createTreeTotalTime + " seconds.");
 			BinaryWriter bw = new BinaryWriter(huffmanTree);
 			
 			try {
@@ -34,6 +39,7 @@ public class HuffmanEncoding {
 				//TODO add huffman Tree to output file for decompression and add a way to decompress file
 				//compress file using huffman tree
 				int j;
+				long encodeTreeStartTime = System.nanoTime();
 				while( (j = brOutput.read()) != -1) {
 					Character c = (char) j;
 					//System.out.print(c); //prints out entire original file's contents
@@ -48,6 +54,9 @@ public class HuffmanEncoding {
 					}
 				}
 				bw.writeRemainingBits();
+				long encodeTreeEndTime = System.nanoTime();
+				double encodeTreeTotalTime = ( (double) encodeTreeEndTime - encodeTreeStartTime) / 1000000000.0;
+				System.out.println("Time to encode Huffman Tree: " + encodeTreeTotalTime + " seconds.");
 				
 				//compare size
 				System.out.println("Size of Original: " + constitution.length() + " bytes.");
@@ -65,25 +74,27 @@ public class HuffmanEncoding {
 		System.out.println("Total time to complete: " + totalTime + " seconds.");
 	}
 
-	private static Map<Character, Integer> findFrequency(BufferedReader br) {
-		frequency = new HashMap<Character, Integer>();
+	private static Map<Character, Integer> findFrequency(BufferedReader br, File constitution) {
+frequency = new HashMap<Character, Integer>();
 		
 		try {
 			// find the frequency of each character
 			Character c;
 			int cCode;
+			ArrayList<FrequencyThread> threads = new ArrayList<>();
 			while((cCode = br.read()) != -1) {
-				c = (char) cCode;
-				Integer currentFreq = frequency.get(c);
-				
-				if(currentFreq == null) {
-					currentFreq = new Integer(1);
-				} else {
-					currentFreq = new Integer(currentFreq.intValue() + 1);
-				}				
-				frequency.put(c, currentFreq);
+				FrequencyThread temp = new FrequencyThread(frequency, cCode);
+				threads.add(temp);
+				temp.start();
 			}
-
+			for(FrequencyThread ft : threads) {
+				try {
+					ft.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			//sort HashMap
 			ValueComparator comp = new ValueComparator(frequency);
 			Map<Character, Integer> sortedFreq = new TreeMap<Character, Integer>(comp);
@@ -95,4 +106,34 @@ public class HuffmanEncoding {
 		}
 		return frequency;
 	}
+	
+	private static class FrequencyThread extends Thread{
+		Character c;
+		HashMap<Character, Integer> frequency;
+		
+		public FrequencyThread(Map<Character, Integer> frequency2, int cCode) {
+				this.frequency = (HashMap<Character, Integer>) frequency2;
+				c = (char) cCode;
+		}
+		
+		public void run() {
+			
+			Integer currentFreq = frequency.get(c);
+			
+			if(currentFreq == null) {
+				currentFreq = new Integer(1);
+			} else {
+				currentFreq = new Integer(currentFreq.intValue() + 1);
+			}				
+			putIn(currentFreq);
+		
+		}
+		
+		private synchronized void putIn(Integer currentFreq) {
+			frequency.put(c, currentFreq);
+		}
+	}
 }
+
+
+

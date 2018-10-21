@@ -1,3 +1,6 @@
+/*
+ * ValueComparator.java
+ */
 package huffmanEncoding;
 
 import java.util.Comparator;

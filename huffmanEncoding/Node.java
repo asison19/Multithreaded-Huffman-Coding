@@ -1,13 +1,14 @@
+/*
+ * Node.Java
+ */
 package huffmanEncoding;
 
-public class Node implements Comparable{
-	
+public class Node implements Comparable{	
 	Character c; //the character this node represents, only if it's a leaf
 	int frequency; // the amount of times this character appears
-	String binaryValue = ""; //binary representation of the character
-	
-	Node left;
-	Node right;
+	String binaryValue = ""; //binary representation of the character	
+	Node left; //left child
+	Node right; //right child
 	
 	public Node() {
 		c = null;	
@@ -30,6 +31,14 @@ public class Node implements Comparable{
 		} else {
 			return 0;
 		}
+	}
+	
+	public String getBinaryValue() {
+		return this.binaryValue;
+	}
+	
+	public synchronized void setBinaryValue(String str) {
+		binaryValue = str;
 	}
 	
 }

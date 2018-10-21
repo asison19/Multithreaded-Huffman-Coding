@@ -1,3 +1,7 @@
+/*
+ * HuffmanTree.java
+ */
+
 package huffmanEncoding;
 
 import java.util.ArrayList;
@@ -15,12 +19,10 @@ public class HuffmanTree {
 		for (Object o : keyArray) {
 			keys.add((Character) o);
 		}
-		
 		createHuffmanTree();
 		convertHuffmanTree();
 	}
-	
-	
+
 	private Node searchNode; //used to return binary value of a node that is looked for
 	//returns the binary representation of the Character ch
 	public String getBinaryValueOf(Character ch) {
@@ -43,15 +45,14 @@ public class HuffmanTree {
 	//0 for left child, 1 for right child
 	private void convertHuffmanTree() {
 		convertHuffmanTree(root);
-		
 	}
 	private void convertHuffmanTree(Node node) {
 		if(node == null)
 			return;
 		if(node.left != null)
-			node.left.binaryValue = node.binaryValue + "0";
+			node.left.setBinaryValue(node.binaryValue + "0");
 		if(node.right !=null)
-			node.right.binaryValue =  node.binaryValue + "1";
+			node.right.setBinaryValue(node.binaryValue + "1");
 		
 		convertHuffmanTree(node.left);
 		convertHuffmanTree(node.right);

@@ -1,5 +1,6 @@
 /*
  * BinaryWriter.java
+ * Use to write binary into a .bin file
  */
 
 package huffmanEncoding;
@@ -8,7 +9,6 @@ import java.io.DataOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.BitSet;
 
 public class BinaryWriter {
 	HuffmanTree huffmanTree;
