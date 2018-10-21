@@ -19,7 +19,7 @@ Compressed file % size of Original: 56.72589%
 Total time to complete: 0.607887745 seconds.
 
 //*************************************************************
-//After creating frequencyThread, where seperate threads deal with 
+//After creating FrequencyThread, where seperate threads deal with 
 //adding character and it's frequency to frequency hashmap
 Time to create Huffman Tree: 3.949013809 seconds.
 Size of Original: 45704 bytes.
@@ -39,5 +39,28 @@ Size of Compressed File: 25926 bytes.
 Compressed file % size of Original: 56.72589%
 Total time to complete: 4.585245766 seconds.
 
+//************************************************************
+//after creating TreeThread in HuffmanTree, there was no difference
+//************************************************************
+//after creating WriteThread
+Time to create Huffman Tree: 4.66153792 seconds.
+Time to encode Huffman Tree: 6.296523924 seconds.
+Size of Original: 45704 bytes.
+Size of Compressed File: 25926 bytes.
+Compressed file % size of Original: 56.72589%
+Total time to complete: 10.963131178 seconds.
 
+Time to create Huffman Tree: 4.228057457 seconds.
+Time to encode Huffman Tree: 3.326361088 seconds.
+Size of Original: 45704 bytes.
+Size of Compressed File: 25926 bytes.
+Compressed file % size of Original: 56.72589%
+Total time to complete: 7.558261087 seconds.
+
+Time to create Huffman Tree: 4.353636217 seconds.
+Time to encode Huffman Tree: 3.375509482 seconds.
+Size of Original: 45704 bytes.
+Size of Compressed File: 25926 bytes.
+Compressed file % size of Original: 56.72589%
+Total time to complete: 7.735090484 seconds.
  */

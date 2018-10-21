@@ -71,7 +71,7 @@ public class HuffmanTree {
 	}
 	@SuppressWarnings("unchecked")
 	private void createHuffmanTree(ArrayList<Node> nodes) {
-		
+		//ArrayList<TreeThread> threads = new ArrayList<>();
 		if(keys.size() == 1) {
 			int sum = nodes.get(0).frequency;
 			root = new Node(null, sum);
@@ -82,13 +82,42 @@ public class HuffmanTree {
 			Collections.sort(nodes);
 			int sum = nodes.get(0).frequency + nodes.get(1).frequency;
 			root = new Node(null, sum);
-			root.left = nodes.remove(0);
-			root.right = nodes.remove(0);
-			nodes.add(root);
+			TreeThread temp = new TreeThread(root, nodes);
+			temp.start();
+			//threads.add(temp);
+			try {
+				temp.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			createHuffmanTree(nodes);
 		}
 	}
 	
+	//multi-threading createHuffmanTree shows no difference in time
+	private static class TreeThread extends Thread{
+		Node root;
+		ArrayList<Node> nodes;
+		public TreeThread(Node root, ArrayList<Node> nodes) {
+			this.root = root;
+			this.nodes = nodes;
+		}
+		
+		public void run() {
+			addNodes();
+		}
+		
+		private synchronized void addNodes() {
+			//critical section
+			root.left = nodes.remove(0);
+			root.right = nodes.remove(0);
+			nodes.add(root);
+			//critical section done
+		}
+	}
+	
+	//display binary values of characters in huffman tree
 	public void displayHuffmanTree() {
 		displayHuffmanTree(root);	
 	}

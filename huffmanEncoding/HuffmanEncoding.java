@@ -75,7 +75,7 @@ public class HuffmanEncoding {
 	}
 
 	private static Map<Character, Integer> findFrequency(BufferedReader br, File constitution) {
-frequency = new HashMap<Character, Integer>();
+		frequency = new HashMap<Character, Integer>();
 		
 		try {
 			// find the frequency of each character

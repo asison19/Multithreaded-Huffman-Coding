@@ -27,13 +27,14 @@ public class BinaryWriter {
 	int b = 0;
 	int bitIndex = 1;
 	public void writeBit(boolean bit) {
+		WriteThread wt = null;
+		boolean wtIsMade = false;
 		if(bitIndex > 8) {
 			bitIndex = 1;
-			try {
-				os.writeByte(b);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			wt = new WriteThread(b, os);
+			wtIsMade = true;
+			wt.start();
+			b = 0;
 		}
 		
 		if(bit) {
@@ -68,15 +69,43 @@ public class BinaryWriter {
 		} else {
 			bitIndex++;
 		}
+		if(wtIsMade) {
+			try {
+				wt.join();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private static class WriteThread extends Thread {
+		int b;
+		DataOutputStream os;
+		
+		public WriteThread(int b, DataOutputStream os) {
+			this.b = b;
+			this.os = os;
+		}
+		
+		public void run() {
+			try {
+				os.writeByte(b);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void writeRemainingBits() {
 		try {
 			os.writeByte(b);
+			b = 0;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 	
 	public int getOutputFileSize() {
